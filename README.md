@@ -1,6 +1,10 @@
 # Sudoku-SAT-Solver
 > Author: Oussama Oulkaid
 
+## Roadmap
+- [x] Build a Sudoku solver.
+- [ ] Write my own solving algorithm through backtracking.
+
 ## Running the solver
 Run the following command:
 
