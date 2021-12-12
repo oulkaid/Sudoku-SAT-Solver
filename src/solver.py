@@ -67,4 +67,3 @@ if (satResult == z3.sat):
 
     print("\n>> Solution")
     print_solution(m_sorted, n)
-
