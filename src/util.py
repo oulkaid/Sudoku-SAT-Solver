@@ -135,14 +135,3 @@ def print_solution(m, n):
             print("|")
         elif (i+1)%int(sqrt(n)) == 0:
             print("| ", end="")
-
-def print_solution_REPLICATED(m, n):
-    for i in range(n*n):
-        print( str(m[i]) + " ", end="")  
-        if (i+1)%(n*int(sqrt(n))) == 0:
-            print("\n")
-        elif (i+1)%n == 0:
-            print("")
-        elif (i+1)%int(sqrt(n)) == 0:
-            print(" ", end="")
-

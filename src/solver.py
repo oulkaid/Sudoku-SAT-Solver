@@ -15,7 +15,7 @@ print_grid(grid, n)
 s = Solver()
 
 # Initialize solution vector
-sol = [ Int(f"s{i}_{j}") for i in range(n) for j in range(n) ]
+sol = [ Int(f"s{int_to_hex(i)}_{int_to_hex(j)}") for i in range(n) for j in range(n) ]
 
 # Distinct values in each line
 dist_line_val = [ If(i == ii,
