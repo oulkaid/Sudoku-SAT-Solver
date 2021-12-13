@@ -1,7 +1,13 @@
+#algorithm
 from util import *
 from math import sqrt
+#import sys
+#sys.setrecursionlimit(30000)
 
 #visiblement, there will be issues with first calls (especially when grid[0][0]==0) FIXME:
+#TODO:One way to check if works for larger grids <functionally> is to fill make the problem easier
+#TODO:One solution to solve this, is to break recursion after acheiving a certain number of calls, 
+#       and resume with obtained state of parameters. So REPEAT until the sudoku is solved
 def find_solution(grid, n, i, j, pos, pre, back_depth):
     if grid[i][j] == 0:
         print_grid(grid, n)
@@ -13,8 +19,10 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
         if digit == 0:
             #backtrack
             #print_grid(grid, n)
-            pre_i = pre[-2-back_depth][0]
-            pre_j = pre[-2-back_depth][1]
+                # pre_i = pre[-2-back_depth][0] FIXME
+                # pre_j = pre[-2-back_depth][1] FIXME
+            pre_i = pre[pre.index([i,j])-1][0]
+            pre_j = pre[pre.index([i,j])-1][1]
             print("......... "+str(pre_i)+" "+str(pre_j))   
             print("back_depth "+str(back_depth))
             print("pos "+str(pos))
