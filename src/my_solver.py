@@ -12,7 +12,7 @@ print(">> Problem")
 print_grid(grid, n)
 
 # Running the algorithm
-sol = find_solution(grid, n)
+sol = find_solution(grid, n, 0, 0, 0)
 
 print("\n>> Soltion")
 print_grid(sol, n)
