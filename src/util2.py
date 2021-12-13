@@ -1,21 +1,29 @@
 #algorithm
 from util import *
 from math import sqrt
-#import sys
+import sys
 #sys.setrecursionlimit(30000)
+RECURSION_LIMIT = sys.getrecursionlimit()-10
 
 #visiblement, there will be issues with first calls (especially when grid[0][0]==0) FIXME:
 #TODO:One way to check if works for larger grids <functionally> is to fill make the problem easier
 #TODO:One solution to solve this, is to break recursion after acheiving a certain number of calls, 
 #       and resume with obtained state of parameters. So REPEAT until the sudoku is solved
+COUNTER = RECURSION_LIMIT
 def find_solution(grid, n, i, j, pos, pre, back_depth):
+    global COUNTER
+    COUNTER -= 1
+    if (COUNTER == 0):
+        COUNTER = RECURSION_LIMIT #RESET
+        return grid, False
+    
     if grid[i][j] == 0:
-        print_grid(grid, n)
+        #print_grid(grid, n) #TODO:UNCOMMENT
         if [i,j] not in pre:
             pre.append([i,j])
             pos.append(0) #at first, try the very first possibility among possibilities
         digit = get_valid_digit_bis(grid, n, i, j, pos[pre.index([i,j])])
-        print("-- "+str(i)+" "+str(j))
+        #print("-- "+str(i)+" "+str(j)) #TODO:UNCOMMENT
         if digit == 0:
             #backtrack
             #print_grid(grid, n)
@@ -23,9 +31,9 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
                 # pre_j = pre[-2-back_depth][1] FIXME
             pre_i = pre[pre.index([i,j])-1][0]
             pre_j = pre[pre.index([i,j])-1][1]
-            print("......... "+str(pre_i)+" "+str(pre_j))   
-            print("back_depth "+str(back_depth))
-            print("pos "+str(pos))
+            #print("......... "+str(pre_i)+" "+str(pre_j)) #TODO:UNCOMMENT
+            #print("back_depth "+str(back_depth)) #TODO:UNCOMMENT
+            #print("pos "+str(pos)) #TODO:UNCOMMENT
             grid[pre_i][pre_j] = 0
             pos[pre.index([pre_i,pre_j])] += 1 #FIXME don't forgot to reset the pos to zero, after re-taking the road
             #pos[pre.index([pre_i,pre_j])] %= len(get_all_valid_digits_so_far(grid, n, pre_i, pre_j)) #FIXES the above!
@@ -38,7 +46,7 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
         grid[i][j] = digit
     
     if i == n-1 and j == n-1:
-        return grid
+        return grid, True
     
     elif j == n-1:
         return find_solution(grid, n, i+1, 0, pos, pre, 0)
@@ -48,9 +56,9 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
 
 def get_valid_digit_bis(sol, n, i, j, pos):
     possibilities = get_all_valid_digits_so_far(sol, n, i, j)
-    print("possibilities "+str(possibilities))
+    #print("possibilities "+str(possibilities)) #TODO:UNCOMMENT
     if len(possibilities) > pos:
-        print("selected "+str(possibilities[pos]))
+        #print("selected "+str(possibilities[pos])) #TODO:UNCOMMENT
         return possibilities[pos] #just randomly getting a value FIXME:
     else: return 0 #here, I shall backtrack to change the previous choice TODO:
                    #IDEA1: use another triple vector to store possibilities
