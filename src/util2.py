@@ -7,7 +7,8 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
         print_grid(grid, n)
         if [i,j] not in pre:
             pre.append([i,j])
-        digit = get_valid_digit_bis(grid, n, i, j, pos)
+            pos.append(0) #at first, try the very first possibility among possibilities
+        digit = get_valid_digit_bis(grid, n, i, j, pos[pre.index([i,j])])
         print("-- "+str(i)+" "+str(j))
         if digit == 0:
             #backtrack
@@ -18,8 +19,13 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
             print("back_depth "+str(back_depth))
             print("pos "+str(pos))
             grid[pre_i][pre_j] = 0
+            pos[pre.index([pre_i,pre_j])] += 1 #FIXME: don't forgot to reset the pos to zero, after re-taking the road
+            #pos[pre.index([pre_i,pre_j])] %= len(get_all_valid_digits_so_far(grid, n, pre_i, pre_j)) #FIXES the above!
             #if we're heading up in depth, we shall reset the position to 1 (~pos+1-depth)
-            return find_solution(grid, n, pre_i, pre_j, pos+1-back_depth, pre, back_depth+1) #.. -back_depth ?
+            return find_solution(grid, n, pre_i, pre_j, pos, pre, back_depth+1) #.. -back_depth ?
+        else: #reset all the values after the barrier to zero
+            for e in range(pre.index([i,j])+1, len(pos)):
+                pos[e] = 0
         
         grid[i][j] = digit
     
@@ -27,9 +33,9 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
         return grid
     
     elif j == n-1:
-        return find_solution(grid, n, i+1, 0, 0, pre, 0)
+        return find_solution(grid, n, i+1, 0, pos, pre, 0)
     else:
-        return find_solution(grid, n, i, j+1, 0, pre, 0)
+        return find_solution(grid, n, i, j+1, pos, pre, 0)
 
 
 def get_valid_digit_bis(sol, n, i, j, pos):
