@@ -12,7 +12,8 @@ print(">> Problem")
 print_grid(grid, n)
 
 # Running the algorithm
-sol = find_solution(grid, n, 0, 0, 0)
+pre = []
+sol = find_solution(grid, n, 0, 0, 0, pre, 0)
 
 print("\n>> Soltion")
 print_grid(sol, n)

@@ -1,14 +1,25 @@
+from util import *
 from math import sqrt
 
-def find_solution(grid, n, i, j, pos):
+#visiblement, there will be issues with first calls (especially when grid[0][0]==0) FIXME:
+def find_solution(grid, n, i, j, pos, pre, back_depth):
     if grid[i][j] == 0:
+        print_grid(grid, n)
+        if [i,j] not in pre:
+            pre.append([i,j])
         digit = get_valid_digit_bis(grid, n, i, j, pos)
+        print("-- "+str(i)+" "+str(j))
         if digit == 0:
             #backtrack
-            if j == 0:
-                return find_solution(grid, n, i-1, n-1, pos+1)
-            #else:
-            #    return find_solution(grid, n, i, j-1, pos+1)
+            #print_grid(grid, n)
+            pre_i = pre[-2-back_depth][0]
+            pre_j = pre[-2-back_depth][1]
+            print("......... "+str(pre_i)+" "+str(pre_j))   
+            print("back_depth "+str(back_depth))
+            print("pos "+str(pos))
+            grid[pre_i][pre_j] = 0
+            #if we're heading up in depth, we shall reset the position to 1 (~pos+1-depth)
+            return find_solution(grid, n, pre_i, pre_j, pos+1-back_depth, pre, back_depth+1) #.. -back_depth ?
         
         grid[i][j] = digit
     
@@ -16,14 +27,16 @@ def find_solution(grid, n, i, j, pos):
         return grid
     
     elif j == n-1:
-        return find_solution(grid, n, i+1, 0, 0)
+        return find_solution(grid, n, i+1, 0, 0, pre, 0)
     else:
-        return find_solution(grid, n, i, j+1, 0)
+        return find_solution(grid, n, i, j+1, 0, pre, 0)
 
 
 def get_valid_digit_bis(sol, n, i, j, pos):
     possibilities = get_all_valid_digits_so_far(sol, n, i, j)
+    print("possibilities "+str(possibilities))
     if len(possibilities) > pos:
+        print("selected "+str(possibilities[pos]))
         return possibilities[pos] #just randomly getting a value FIXME:
     else: return 0 #here, I shall backtrack to change the previous choice TODO:
                    #IDEA1: use another triple vector to store possibilities
