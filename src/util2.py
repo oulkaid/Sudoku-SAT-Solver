@@ -19,11 +19,11 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
             print("back_depth "+str(back_depth))
             print("pos "+str(pos))
             grid[pre_i][pre_j] = 0
-            pos[pre.index([pre_i,pre_j])] += 1 #FIXME: don't forgot to reset the pos to zero, after re-taking the road
+            pos[pre.index([pre_i,pre_j])] += 1 #FIXME don't forgot to reset the pos to zero, after re-taking the road
             #pos[pre.index([pre_i,pre_j])] %= len(get_all_valid_digits_so_far(grid, n, pre_i, pre_j)) #FIXES the above!
             #if we're heading up in depth, we shall reset the position to 1 (~pos+1-depth)
             return find_solution(grid, n, pre_i, pre_j, pos, pre, back_depth+1) #.. -back_depth ?
-        else: #reset all the values after the barrier to zero
+        else: #reset all the values after the barrier to zero #FIXES the above
             for e in range(pre.index([i,j])+1, len(pos)):
                 pos[e] = 0
         
