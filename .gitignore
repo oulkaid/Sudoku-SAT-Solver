@@ -1,2 +1,16 @@
 __pycache__/
 *.log
+
+style/
+figures/
+*.tex
+*.out 
+*.log 
+*.run.xml 
+*.synctex.gz 
+*.fls 
+*.blg 
+*.bcf 
+*.bbl 
+*.aux 
+*.fdb_latexmk
