@@ -2,8 +2,25 @@
 from util import *
 from math import sqrt
 import sys
-#sys.setrecursionlimit(30000)
+import logging
+
 RECURSION_LIMIT = sys.getrecursionlimit()-10
+logging.basicConfig(level=logging.DEBUG)
+
+def fill_trivial_cells(grid, n):
+    filled = False
+    while not filled:
+        filled = True #hypothesis
+        for i in range(n):
+            for j in range(n):
+                if grid[i][j] == 0:
+                    possibilities = get_all_valid_digits_so_far(grid, n, i, j)
+                    if len(possibilities) == 1:
+                        grid[i][j] = possibilities[0]
+                        filled = False
+                        #logging.info("grid:"+str(i)+","+str(j)) ##
+    return grid
+
 
 #visiblement, there will be issues with first calls (especially when grid[0][0]==0) FIXME:
 #TODO:One way to check if works for larger grids <functionally> is to fill make the problem easier
