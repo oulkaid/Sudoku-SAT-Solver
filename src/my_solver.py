@@ -15,27 +15,39 @@ n, grid = input_parser(lines)
 print(">> Problem")
 print_grid(grid, n)
 
-# 1.DONE: Find trivial solutions (cells with one single possible digit). Then move to backtracking algorithm
-grid = fill_trivial_cells(grid, n)
-print("\n>> Mid-soltion")
-print_grid(grid, n)
-logging.info("finished filling trivial solutions")
-# TODO: in fact, this shall be generalised, even when backtracking
-#       meaning that once we obtain a certain digit for some cell, we might run the trivial solutions finder
+if check_init_integrity(grid, n) == True:
+#solve sudoku:
 
-# 2. Running the backtracking algorithm
-pre = []
-pos = []
-sol, solved = find_solution(grid, n, 0, 0, pos, pre, 0)
-it = 0
-while not solved:
-    it += 1
-    if it%1000 == 0:
-        logging.info(it)
-        print(pos)
+    # 1.DONE: Find trivial solutions (cells with one single possible digit). Then move to backtracking algorithm
+    grid, filled_cells = fill_trivial_cells(grid, n)
+    '''
+    if filled_cells > 0:
+        print("\n>> Filling trivial cells")
         print_grid(grid, n)
-    sol, solved = find_solution(sol, n, 0, 0, pos, pre, 0)
+    '''
 
+    # TODO: in fact, this may shall be generalised, even when backtracking
+    #       meaning that once we obtain a certain digit for some cell, we might run the trivial solutions finder
+    
+    
+    # 2. Running the backtracking algorithm
+    pre = []
+    pos = []
+    sol, finished, solved = find_solution(grid, n, 0, 0, pos, pre, 0)
+    it = 0
+    while not finished:
+        it += 1
+        if it%1000 == 0:
+            logging.info(it)
+            print(pos)
+            print_grid(grid, n)
+        sol, finished, solved = find_solution(sol, n, 0, 0, pos, pre, 0)
 
-print("\n>> Soltion")
-print_grid(sol, n)
+    if solved:
+        print("\n>> Soltion")
+        print_grid(sol, n)
+    else:
+        print("\n>> This is not a valid Sudoku problem!")
+
+else:
+    print("\n>> This is not a valid Sudoku problem!")

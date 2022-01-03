@@ -9,6 +9,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 def fill_trivial_cells(grid, n):
     filled = False
+    filled_cells = 0
     while not filled:
         filled = True #hypothesis
         for i in range(n):
@@ -18,13 +19,14 @@ def fill_trivial_cells(grid, n):
                     if len(possibilities) == 1:
                         grid[i][j] = possibilities[0]
                         filled = False
+                        filled_cells += 1
                         #logging.info("grid:"+str(i)+","+str(j)) ##
-    return grid
+    return grid, filled_cells
 
 
-#visiblement, there will be issues with first calls (especially when grid[0][0]==0) FIXME:
-#TODO:One way to check if works for larger grids <functionally> is to fill make the problem easier
-#TODO:One solution to solve this, is to break recursion after acheiving a certain number of calls, 
+#FIXME: visiblement, there will be issues with first calls (especially when grid[0][0]==0)
+#FIXME: pick some good heuristic to choose the next variable to assign. Otherwise, let it this way.
+#DONE:One solution to solve this, is to break recursion after acheiving a certain number of calls, 
 #       and resume with obtained state of parameters. So REPEAT until the sudoku is solved
 COUNTER = RECURSION_LIMIT
 def find_solution(grid, n, i, j, pos, pre, back_depth):
@@ -32,15 +34,15 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
     COUNTER -= 1
     if (COUNTER == 0):
         COUNTER = RECURSION_LIMIT #RESET
-        return grid, False
+        return grid, False, False
     
     if grid[i][j] == 0:
-        #print_grid(grid, n) #TODO:UNCOMMENT
+        #print_grid(grid, n) ##
         if [i,j] not in pre:
             pre.append([i,j])
             pos.append(0) #at first, try the very first possibility among possibilities
-        digit = get_valid_digit_bis(grid, n, i, j, pos[pre.index([i,j])])
-        #print("-- "+str(i)+" "+str(j)) #TODO:UNCOMMENT
+        digit = get_valid_digit(grid, n, i, j, pos[pre.index([i,j])])
+        #print("-- "+str(i)+" "+str(j)) ##
         if digit == 0:
             #backtrack
             #print_grid(grid, n)
@@ -48,13 +50,18 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
                 # pre_j = pre[-2-back_depth][1] FIXME
             pre_i = pre[pre.index([i,j])-1][0]
             pre_j = pre[pre.index([i,j])-1][1]
-            #print("......... "+str(pre_i)+" "+str(pre_j)) #TODO:UNCOMMENT
-            #print("back_depth "+str(back_depth)) #TODO:UNCOMMENT
-            #print("pos "+str(pos)) #TODO:UNCOMMENT
+            #print("......... "+str(pre_i)+" "+str(pre_j)) ##
+            #print("back_depth "+str(back_depth)) ##
+            #print("pos "+str(pos)) ##
             grid[pre_i][pre_j] = 0
             pos[pre.index([pre_i,pre_j])] += 1 #FIXME don't forgot to reset the pos to zero, after re-taking the road
             #pos[pre.index([pre_i,pre_j])] %= len(get_all_valid_digits_so_far(grid, n, pre_i, pre_j)) #FIXES the above!
             #if we're heading up in depth, we shall reset the position to 1 (~pos+1-depth)
+            # The follwing if statement means that if we repeat searching for solutions for a cell
+            # repeatedly, this means that the search engine is stuck at this position. 
+            # and that no other options are possible. Then, this only means UNSATISFIABLE PROBLEM!
+            if pos[pre.index([pre_i,pre_j])] > len( get_all_valid_digits_so_far(grid, n, pre_i, pre_j) ):
+                return grid, True, False
             return find_solution(grid, n, pre_i, pre_j, pos, pre, back_depth+1) #.. -back_depth ?
         else: #reset all the values after the barrier to zero #FIXES the above
             for e in range(pre.index([i,j])+1, len(pos)):
@@ -63,7 +70,7 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
         grid[i][j] = digit
     
     if i == n-1 and j == n-1:
-        return grid, True
+        return grid, True, True
     
     elif j == n-1:
         return find_solution(grid, n, i+1, 0, pos, pre, 0)
@@ -71,79 +78,22 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
         return find_solution(grid, n, i, j+1, pos, pre, 0)
 
 
-def get_valid_digit_bis(sol, n, i, j, pos):
+def get_valid_digit(sol, n, i, j, pos):
     possibilities = get_all_valid_digits_so_far(sol, n, i, j)
-    #print("possibilities "+str(possibilities)) #TODO:UNCOMMENT
+    #print("possibilities "+str(possibilities)) ##
     if len(possibilities) > pos:
-        #print("selected "+str(possibilities[pos])) #TODO:UNCOMMENT
-        return possibilities[pos] #just randomly getting a value FIXME:
-    else: return 0 #here, I shall backtrack to change the previous choice TODO:
-                   #IDEA1: use another triple vector to store possibilities
+        #print("selected "+str(possibilities[pos])) ##
+        return possibilities[pos]
+    else: return 0 #Here, when we get this 0 inside the find_solution, it'll backtrack to change the previous choice
+                   #So the possibilities are being reminded through the simple `pos` index
 
-# def find_solution(grid, n):
-#     sol = grid
-#     i = 0
-#     j = 0
-#     backtrack = False
-#     while i < n:
-#         while j < n:
-#             backtrack = False
-#             if sol[i][j] == 0:
-#                 sol[i][j] = get_valid_digit(sol, n, i, j)
-#                 #FIXME: here, we have to go back in indexes i,j (backtrack) when we're stuck
-#                 #maybe, we can indicate which choice to take by using some global variable
-#                 #we'll certainly need a way to remind the last filled cell, so that we can restart from there
-#                 #some recursion is required. think about it!
-#                 if get_valid_digit(sol, n, i, j) == 0:
-#                     i = last_i
-#                     j = last_j
-#                     backtrack = True
-#                     #print("backtrack to: "+str(i) + " " +str(j))
-
-#                 last_i = i
-#                 last_j = j
-            
-#             if not backtrack:
-#                 j += 1
-#         if not backtrack:
-#             i += 1
-
-#     return sol
-
-# def find_solution(grid, n):
-#     sol = grid
-#     for i in range(n):
-#         for j in range(n):
-#             if sol[i][j] == 0:
-#                 sol[i][j] = get_valid_digit(sol, n, i, j)
-#                 #FIXME: here, we have to go back in indexes i,j (backtrack) when we're stuck
-#                 #maybe, we can indicate which choice to take by using some global variable
-#                 #we'll certainly need a way to remind the last filled cell, so that we can restart from there
-#                 #some recursion is required. think about it!
-#                 if get_valid_digit(sol, n, i, j) == 0:
-#                     i = last_i
-#                     j = last_j
-
-#                 last_i = i
-#                 last_j = j
-
-#     return sol
-
-
-def get_valid_digit(sol, n, i, j):
-    possibilities = get_all_valid_digits_so_far(sol, n, i, j)
-    if len(possibilities) > 0:
-        return possibilities[0] #just randomly getting a value FIXME:
-    else: return 0 #here, I shall backtrack to change the previous choice TODO:
-                   #IDEA1: use another triple vector to store possibilities
-    
 
 def get_all_valid_digits_so_far(sol, n, i, j):
     possibilities = []
     for digit in range(1, n+1):
         if is_valid_digit(sol, n, i, j, digit):
             possibilities.append(digit)
-    
+
     return possibilities
         
 
@@ -167,6 +117,16 @@ def is_valid_digit(sol, n, i, j, digit):
             index_jj = base_box_j + jj%int(sqrt(n))
             if index_ii != i and index_jj != j:
                 if sol[index_ii][index_jj] == digit:
+                    return False
+    
+    return True
+
+#checks the integrity of the initial grid: lines, cols, boxes
+def check_init_integrity(grid, n):
+    for i in range(n):
+        for j in range(n):
+            if grid[i][j] != 0:
+                if not is_valid_digit(grid, n, i, j, grid[i][j]):
                     return False
     
     return True
