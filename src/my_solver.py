@@ -15,21 +15,13 @@ n, grid = input_parser(lines)
 print(">> Problem")
 print_grid(grid, n)
 
-if check_init_integrity(grid, n) == True:
-#solve sudoku:
+#checking the integrity of the initial grid
+if check_integrity(grid, n) == True:
+    #solve sudoku:
 
     # 1.DONE: Find trivial solutions (cells with one single possible digit). Then move to backtracking algorithm
-    grid, filled_cells = fill_trivial_cells(grid, n)
-    '''
-    if filled_cells > 0:
-        print("\n>> Filling trivial cells")
-        print_grid(grid, n)
-    '''
+    grid = fill_trivial_cells(grid, n)  
 
-    # TODO: in fact, this may shall be generalised, even when backtracking
-    #       meaning that once we obtain a certain digit for some cell, we might run the trivial solutions finder
-    
-    
     # 2. Running the backtracking algorithm
     pre = []
     pos = []
@@ -47,7 +39,7 @@ if check_init_integrity(grid, n) == True:
         print("\n>> Soltion")
         print_grid(sol, n)
     else:
-        print("\n>> This is not a valid Sudoku problem!")
+        print("\n>> (1) This is not a valid Sudoku problem!")
 
 else:
-    print("\n>> This is not a valid Sudoku problem!")
+    print("\n>> (2) This is not a valid Sudoku problem!")

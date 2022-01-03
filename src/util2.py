@@ -3,13 +3,13 @@ from util import *
 from math import sqrt
 import sys
 import logging
+import copy
 
 RECURSION_LIMIT = sys.getrecursionlimit()-10
 logging.basicConfig(level=logging.DEBUG)
 
 def fill_trivial_cells(grid, n):
     filled = False
-    filled_cells = 0
     while not filled:
         filled = True #hypothesis
         for i in range(n):
@@ -19,9 +19,8 @@ def fill_trivial_cells(grid, n):
                     if len(possibilities) == 1:
                         grid[i][j] = possibilities[0]
                         filled = False
-                        filled_cells += 1
                         #logging.info("grid:"+str(i)+","+str(j)) ##
-    return grid, filled_cells
+    return grid
 
 
 #FIXME: visiblement, there will be issues with first calls (especially when grid[0][0]==0)
@@ -57,17 +56,38 @@ def find_solution(grid, n, i, j, pos, pre, back_depth):
             pos[pre.index([pre_i,pre_j])] += 1 #FIXME don't forgot to reset the pos to zero, after re-taking the road
             #pos[pre.index([pre_i,pre_j])] %= len(get_all_valid_digits_so_far(grid, n, pre_i, pre_j)) #FIXES the above!
             #if we're heading up in depth, we shall reset the position to 1 (~pos+1-depth)
+
             # The follwing if statement means that if we repeat searching for solutions for a cell
             # repeatedly, this means that the search engine is stuck at this position. 
             # and that no other options are possible. Then, this only means UNSATISFIABLE PROBLEM!
             if pos[pre.index([pre_i,pre_j])] > len( get_all_valid_digits_so_far(grid, n, pre_i, pre_j) ):
-                return grid, True, False
+                return grid, True, False #no possible solution
             return find_solution(grid, n, pre_i, pre_j, pos, pre, back_depth+1) #.. -back_depth ?
         else: #reset all the values after the barrier to zero #FIXES the above
             for e in range(pre.index([i,j])+1, len(pos)):
                 pos[e] = 0
         
         grid[i][j] = digit
+        #_IMPORTANT_: We had the following idea in the beginning:
+        # Once we obtain a certain digit for some cell, we run the trivial "digits for cells" finder
+        # But this won't work, because we should only apply it if we are sure about the new digit being picked.
+        # Or maybe we can still use it, but we must keep the old version of grid if the new one lacks integrity.
+        #_NOW_: The idea is to use simply to check if the grid loses integrity or not (when adding the digit).
+        # If it loses intergity, then we shouldn't wast time with it. We directly drop the digit, keep the old grid & move to next step.
+        # If nothing cound't be said, we simply have to keep the oldest version of the grid, and go on.
+        #_OTHERWISE_: It is actually way better to do this verification wihin `is_valid_digit` function
+        #   TODO TO Be Investigated \!/
+        '''
+        tmp_grid = copy.deepcopy(grid) #this is the only way to copy list in python. /!\
+        tmp_grid = fill_trivial_cells(tmp_grid, n)
+        #print_grid(grid,n) ##
+        #print_grid(tmp_grid,n) ##
+        if check_integrity(tmp_grid, n) == False:
+            grid[i][j] = 0 #eliminate `digit` since it is not working for sure (for the actual configuration)
+            # recursive call to find another possibility starting from grid[i][j]
+            print("DROP `digit`;") ##
+            return find_solution(grid, n, i, j, pos, pre, 0)
+        '''
     
     if i == n-1 and j == n-1:
         return grid, True, True
@@ -121,8 +141,8 @@ def is_valid_digit(sol, n, i, j, digit):
     
     return True
 
-#checks the integrity of the initial grid: lines, cols, boxes
-def check_init_integrity(grid, n):
+#checks the integrity of the grid: lines, cols, boxes
+def check_integrity(grid, n):
     for i in range(n):
         for j in range(n):
             if grid[i][j] != 0:

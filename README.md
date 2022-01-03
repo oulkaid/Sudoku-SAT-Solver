@@ -4,9 +4,13 @@
 ## Roadmap
 - [x] Build a Sudoku solver
 - [x] Write my own solving algorithm through backtracking
+    - [x] Soundness; tell if a solution is impossible (i.e. the grid is not a sudoku problem)
+    - [ ] Check the uniqueness of a solution 
     - [ ] Implement some good heuristics for picking the next digit
     - [ ] Maybe combine with other techniques
+        - [ ] Break backtracking by filling trivial solutions and see where it guides; difficult to supervise
     - [ ] Optimize the overall implementation
+- [ ] Write a Sudoku problem generator
 
 ## Running the z3 based solver
 Run the following command:
