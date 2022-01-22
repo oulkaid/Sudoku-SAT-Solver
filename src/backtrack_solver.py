@@ -1,9 +1,9 @@
 from math import sqrt
 import logging
 import sys
-from util import tools
-from util import algo
-from util import config
+from utils import tools
+from utils import algo
+from utils import config
 logging.basicConfig(level=logging.INFO)
 
 

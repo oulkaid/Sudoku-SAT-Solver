@@ -1,7 +1,7 @@
 from z3 import *
 from math import sqrt
 import sys
-from util import tools
+from utils import tools
 
 lines = []
 with open(sys.argv[1], 'r') as f:

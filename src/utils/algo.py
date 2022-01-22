@@ -1,8 +1,8 @@
 from math import sqrt
 import copy
 import sys
-from util import tools
-from util import config
+from utils import tools
+from utils import config
 
 log_file = open("trace.log","w")
 old_stdout = sys.stdout
