@@ -8,20 +8,6 @@ log_file = open("trace.log","w")
 old_stdout = sys.stdout
 
 
-def fill_trivial_cells(grid, n):
-    filled = False
-    while not filled:
-        filled = True #hypothesis
-        for i in range(n):
-            for j in range(n):
-                if grid[i][j] == 0:
-                    possibilities = get_all_valid_digits_so_far(grid, n, i, j)
-                    if len(possibilities) == 1:
-                        grid[i][j] = possibilities[0]
-                        filled = False
-    return grid
-
-
 COUNTER = config.RECURSION_LIMIT
 def find_solution(grid, n, i, j, pos, pre, back_depth):
     global COUNTER

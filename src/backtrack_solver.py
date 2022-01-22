@@ -23,9 +23,6 @@ if algo.check_integrity(grid, n) == True:
     # Find initially blank squares
     algo.store_blank_squares(grid, n)
 
-    # Find trivial solutions (cells with one single possible digit). Then move to backtracking algorithm
-    grid = algo.fill_trivial_cells(grid, n)
-
     # Running the backtracking algorithm
     pre = []
     pos = []
