@@ -1,38 +1,34 @@
-# Sudoku-SAT-Solver
+# Sudoku Solver
 > Author: Oussama Oulkaid
 
-## Roadmap
-- [x] Build a Sudoku solver
-- [x] Write my own solving algorithm through backtracking
-    - [x] Soundness; tell if a solution is impossible (i.e. the grid is not a sudoku problem)
-    - [ ] Check the uniqueness of a solution 
-    - [ ] Implement some good heuristics for picking the next digit
-    - [ ] Maybe combine with other techniques
-        - [ ] Break backtracking by filling trivial solutions and see where it guides; difficult to supervise
-    - [ ] Optimize the overall implementation
-- [ ] Write a Sudoku problem generator
+## Environment
+To run the tools you need:
+- Python3 (tested with version 3.8.10)
+- Python packages: `z3`, `math`, `sys`, `logging`
 
-## Running the z3 based solver
-Run the following command:
+## 1. Running the tools
 
-    python3 src/z3_solver.py inputs/{INPUT_X}.txt
+### 1.1. Z3 Based Solver: `src/s3_solver.py`
+To solve a Sudoku problem using the *Z3 based Solver*, run the following command:
 
-Where `{INPUT_X}.txt` denotes the file containing the Sudoku problem to be solved. 
+    python3 src/z3_solver.py samples/{GRID_X}.txt
+
+Where `{GRID_X}.txt` denotes the name of the file containing the Sudoku problem to be solved. Examples are provided inside folder `samples/`.
 
 For Example:
 
-    python3 src/z3_solver.py inputs/input_9.txt
+    python3 src/z3_solver.py samples/grid_9.txt
 
-## Running my personal solver
-Run the following command (you might want to redirect the search trace to a log file):
+This will tell if the problem is satisfiable. If yes, it will print a solution.
 
-    python3 src/my_solver.py inputs/{INPUT_X}.txt > {TRACE_NAME}.log
+### 1.2. Backtracking Based Solver: `src/backtrack_solver.py`
+Similarly, to use this solver, run the following command:
 
-For Example:
+    python3 src/backtrack_solver.py samples/{GRID_X}.txt
 
-    python3 src/my_solver.py inputs/input_9.txt > trace.log
+Where `{GRID_X}.txt` denotes the name of the file containing the Sudoku problem to be solved.
 
-Otherwise, you can discard the trace by redirecting the output to the null device of your operating system (especially when expecting a huge trace size that might cause a storage issue). 
-For Ubuntu it's `/dev/null`.
+A trace will be generated (file `trace.log`). It contains the search history performed by the tool.
+The program terminates by either giving a solution, or by reporting that the input is not a Sudoku problem.
 
-    python3 src/my_solver.py inputs/input_9.txt > /dev/null
+> For detailed documentation about these tools, you can refer to `doc/report.pdf`.

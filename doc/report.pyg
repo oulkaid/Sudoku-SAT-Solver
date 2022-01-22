@@ -1,0 +1,2 @@
+# Initialize solution vector
+sol = [ Int(f"s{int_to_hex(i)}_{int_to_hex(j)}") for i in range(n) for j in range(n) ]

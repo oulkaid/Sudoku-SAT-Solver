@@ -12,7 +12,7 @@ def input_parser(lines):
                 end_of_line = True
             elif lines[i][item] == ' ':
                 pass
-            elif lines[i][item] == '-' or lines[i][item] == '_':
+            elif lines[i][item] == '-' or lines[i][item] == '_' or lines[i][item] == '.':
                 new_line.append(0)
             elif (lines[i][item] >= 'A' and lines[i][item] <= 'P') or (lines[i][item] >= 'a' and lines[i][item] <= 'p'):
                 new_line.append( hex_to_int( lines[i][item] ) )
