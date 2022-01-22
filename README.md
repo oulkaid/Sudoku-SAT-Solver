@@ -31,4 +31,4 @@ Where `{GRID_X}.txt` denotes the name of the file containing the Sudoku problem 
 A trace will be generated (file `trace.log`). It contains the search history performed by the tool.
 The program terminates by either giving a solution, or by reporting that the input is not a Sudoku problem.
 
-> For detailed documentation about these tools, you can refer to [`doc/manual.pdf`](https://github.com/oulkaid/Sudoku-SAT-Solver/tree/main/doc/manual.pdf).
+> For a detailed documentation about these tools, you can refer to [`doc/manual.pdf`](https://github.com/oulkaid/Sudoku-SAT-Solver/tree/main/doc/manual.pdf).
