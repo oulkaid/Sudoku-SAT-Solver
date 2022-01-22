@@ -4,7 +4,7 @@
 ## Environment
 To run the tools you need:
 - Python3 (tested with version 3.8.10)
-- Python packages: `z3`, `math`, `sys`, `logging`
+- Python packages: `z3`, `math`, `sys`, `logging`, `copy`
 
 ## 1. Running the tools
 
