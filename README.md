@@ -1,6 +1,8 @@
 # Sudoku Solver
 > Author: Oussama Oulkaid
 
+![4x4, 9x9, 16x16, 25x25](img/sudokus.png)
+
 ## Environment
 To run the tools you need:
 - Python3 (tested with version 3.8.10)
